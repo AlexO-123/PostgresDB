@@ -1,12 +1,8 @@
 package com.alexo.jdbi;
 
-import com.alexo.api.EmployeePojo;
 import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-
-import java.util.List;
 
 /**
  * Data access for the PostgresDB
@@ -14,25 +10,35 @@ import java.util.List;
  */
 public abstract class PostgresDAO {
 
-    @SqlUpdate("create table if not exists test (" +
-            "id serial primary key, name varchar(32), age integer, timestamp varchar(32), active char default 'Y')")
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS book_events (" +
+            "id serial primary key NOT NULL, " +
+            "isbn varchar(32) NOT NULL, " +
+            "event_type varchar(32) NOT NULL, " +
+            "data jsonb NOT NULL, " +
+            "timestamp varchar(32) NOT NULL)")
     public abstract void createTable();
+
+    @SqlQuery(
+            "SELECT count(*) AS exact_count " +
+            "FROM test" +
+            "WHERE isbn = :isbn")
+    public abstract int findBook(@Bind("isbn") String isbn);
 
     /*@SqlUpdate(
             "insert into employees (name, age, timestamp) " +
             "values (:name, :age, :timestamp)")
-    public abstract void insert(@Bind("name") String name, @Bind("age") int age, @Bind("timestamp") String timestamp);*/
+    public abstract void insert(@Bind("name") String name, @Bind("age") int age, @Bind("timestamp") String timestamp);*//*
 
     @SqlUpdate(
             "insert into test (name, age, timestamp) " +
                     "values (:name, :age, :timestamp)")
     public abstract void insertNew(@BindBean EmployeePojo e, @Bind("timestamp") String timestamp);
 
-    /*@SqlUpdate(
+    *//*@SqlUpdate(
             "update employees " +
             "set name = :name, age = :age, timestamp = :timestamp " +
             "where id = :id")
-    public abstract int update(@BindBean Employee s, @Bind("timestamp") String timestamp, @Optional(@Bind("age") int age));*/
+    public abstract int update(@BindBean Employee s, @Bind("timestamp") String timestamp, @Optional(@Bind("age") int age));*//*
 
     @SqlUpdate(
             "update test " +
@@ -54,5 +60,5 @@ public abstract class PostgresDAO {
 
     @SqlQuery(
             "select count(*) AS exact_count FROM test;")
-    public abstract int dbSize();
+    public abstract int dbSize();*/
 }
