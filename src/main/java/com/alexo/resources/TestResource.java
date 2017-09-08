@@ -72,7 +72,7 @@ public class TestResource {
      */
     @POST
     @Path("/add-book")
-    public String addBookCmd(
+    public String createBook(
             @DefaultValue("1111") @QueryParam("isbn") String isbn,
             @DefaultValue("Book1") @QueryParam("title") String title) {
 
@@ -97,7 +97,7 @@ public class TestResource {
                 return "Book already in Table ... event not created";
             } else {
                 if(readDAO.addBook(book) == 1) {
-                    postgresDAO.insertEvent(isbn, "created", json, timeStamp);
+                    postgresDAO.insertEvent(isbn, "CREATED", json, timeStamp);
                 } else {
                     return "Failed to create book";
                 }
@@ -134,7 +134,7 @@ public class TestResource {
     }
 
 
-    public String loanCmd(@QueryParam("isbn") String isbn) {
+    public String loanBook(@QueryParam("isbn") String isbn) {
 
         return "";
     }
@@ -147,7 +147,7 @@ public class TestResource {
      */
     @POST
     @Path("/return")
-    public String returnCmd(@QueryParam("isbn") String isbn) {
+    public String returnBook(@QueryParam("isbn") String isbn) {
         return "";
     }
 }
