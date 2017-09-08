@@ -1,6 +1,7 @@
 package com.alexo;
 
 import com.alexo.jdbi.PostgresDAO;
+import com.alexo.jdbi.ReadDAO;
 import com.alexo.resources.TestResource;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
@@ -35,8 +36,9 @@ public class PostgresSQLApplication extends Application<PostgresSQLConfiguration
         // final UserDAO dao = jdbi.onDemand(UserDAO.class);
         // environment.jersey().register(new UserResource(dao));
         final PostgresDAO postgresDAO = jdbi.onDemand(PostgresDAO.class);
+        final ReadDAO readDAO = jdbi.onDemand(ReadDAO.class);
 
-        final TestResource testResource = new TestResource(postgresDAO);
+        final TestResource testResource = new TestResource(postgresDAO, readDAO);
         environment.jersey().register(testResource);
     }
 
