@@ -93,14 +93,17 @@ public class TestResource {
             String json = gson.toJson(book);
             logger.debug(json);
 
+            /*
+            Check the read model
+            If book not found ... update the db and fire the event
+             */
             if (readDAO.findBook(isbn) != 0) {
                 return "Book already in Table ... event not created";
             } else {
-                if(readDAO.addBook(book) == 1) {
-                    postgresDAO.insertEvent(isbn, "CREATED", json, timeStamp);
-                } else {
-                    return "Failed to create book";
-                }
+                postgresDAO.createFunc();
+                postgresDAO.triggerFunc();
+                postgresDAO.createTrigger();
+                postgresDAO.insertEvent(isbn, "CREATED", json, timeStamp);
             }
         } catch (IOException e) {
             e.printStackTrace();

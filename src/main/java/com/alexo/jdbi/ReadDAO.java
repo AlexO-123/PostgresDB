@@ -1,11 +1,13 @@
 package com.alexo.jdbi;
 
-import com.alexo.api.Book;
 import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
+/**
+ * Read data model for booked created
+ * Gets queried when a new book wants to be added to the db
+ */
 public abstract class ReadDAO {
 
     @SqlUpdate(
@@ -15,10 +17,10 @@ public abstract class ReadDAO {
             "pages varchar(32) NOT NULL)")
     public abstract void createBookTable();
 
-    @SqlUpdate(
+    /*@SqlUpdate(
             "INSERT into books (isbn, title, pages) " +
             "VALUES (:isbn, :title, :pages)")
-    public abstract int addBook(@BindBean Book book);
+    public abstract int addBook(@BindBean Book book);*/
 
     @SqlQuery(
             "SELECT count(*) AS exact_count " +
