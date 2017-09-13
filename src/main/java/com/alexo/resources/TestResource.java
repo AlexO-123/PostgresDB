@@ -138,7 +138,6 @@ public class TestResource {
                 String bookJson = gson.toJson(currentBook);
                 if (readDAO.findBook(currentBook.getIsbn()) != 0) {
                     failed += 1;
-                    //return currentBook.getTitle() + " is already in Table ... event not created";
                 } else {
                     postgresDAO.createFunc();
                     postgresDAO.triggerFunc();
@@ -155,12 +154,17 @@ public class TestResource {
                 "Number failed = " + failed;
     }
 
+    /**
+     * Interface to bind json data type to postgres table ... JDBI can only bind to single argument <code>@Bind</code> or <code>@BindBean</code>
+     * To solve this, we create a PGobject instance and bind to that
+     * For that, we need to create our own <code>@BindAnnotation</code>
+     * Credit for code :-http://blog.anorakgirl.co.uk/2016/01/using-jdbi-with-postgres-json-data/
+     */
     @BindingAnnotation(BindJson.JsonBinderFactory.class)
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.PARAMETER})
     public @interface BindJson {
         String value();
-
         class JsonBinderFactory implements BinderFactory {
             @Override
             public Binder build(Annotation annotation) {
@@ -171,14 +175,13 @@ public class TestResource {
                         data.setType("jsonb");
                         data.setValue(jsonString);
                         q.bind(bind.value(), data);
-                    } catch (SQLException ex) {
-                        throw new IllegalStateException("Error Binding JSON",ex);
+                    } catch (SQLException e) {
+                        throw new IllegalStateException("Error Binding JSON",e);
                     }
                 };
             }
         }
     }
-
 
     public String loanBook(@QueryParam("isbn") String isbn) {
 
