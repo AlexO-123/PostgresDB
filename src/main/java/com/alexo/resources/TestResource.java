@@ -1,7 +1,11 @@
 package com.alexo.resources;
 
+import com.alexo.Event.AddBookEvent;
 import com.alexo.api.Book;
 import com.alexo.api.Books;
+import com.alexo.command.AddBookCommand;
+import com.alexo.command.Command;
+import com.alexo.command.CommandHandler;
 import com.alexo.jdbi.PostgresDAO;
 import com.alexo.jdbi.ReadDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +36,7 @@ public class TestResource {
     private static Logger logger = LoggerFactory.getLogger(TestResource.class.getName());
     private final ObjectMapper objectMapper = new ObjectMapper();
     private Gson gson = new Gson();
+    private final String FILEPATH = "/home/alex/Documents/booksJson.json";
 
     public TestResource(PostgresDAO postgresDAO, ReadDAO readDAO) {
         this.postgresDAO = postgresDAO;
@@ -113,6 +118,34 @@ public class TestResource {
     }
 
     /**
+     * Map command to an event to execute
+     * @return String confirmation - assume success
+     */
+    @POST
+    @Path("/add-book-command")
+    public String addBookCommand() {
+        CommandHandler commandHandler = new CommandHandler();
+
+        try{
+            Books books = objectMapper.readValue(
+                    new File(FILEPATH), Books.class);
+
+            logger.debug(gson.toJson(books));
+
+            for(Book currentBook: books.getBooks()) {
+                AddBookEvent addBookEvent = new AddBookEvent(currentBook, postgresDAO, readDAO);
+                Command addBook = new AddBookCommand(addBookEvent);
+                commandHandler.setCommand(addBook);
+                commandHandler.triggerEvent();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "add-command";
+    }
+
+    /**
      * Adds a batch of books from json file to the DB
      * Checks if each book is present in read model
      * If it succeeds ... CREATED event in event table
@@ -153,6 +186,26 @@ public class TestResource {
         return "Books Added = " + added + '\n' +
                 "Number failed = " + failed;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Interface to bind json data type to postgres table ... JDBI can only bind to single argument <code>@Bind</code> or <code>@BindBean</code>

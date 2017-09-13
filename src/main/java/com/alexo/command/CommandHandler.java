@@ -7,7 +7,7 @@ public class CommandHandler {
         this.command = command;
     }
 
-    public void addBook() {
+    public void triggerEvent() {
         command.execute();
     }
 }
