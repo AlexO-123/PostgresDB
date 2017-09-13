@@ -1,6 +1,7 @@
 package com.alexo.resources;
 
 import com.alexo.api.Book;
+import com.alexo.api.Books;
 import com.alexo.jdbi.PostgresDAO;
 import com.alexo.jdbi.ReadDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +31,7 @@ public class TestResource {
     private ReadDAO readDAO;
     private static Logger logger = LoggerFactory.getLogger(TestResource.class.getName());
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+    private Gson gson = new Gson();
 
     public TestResource(PostgresDAO postgresDAO, ReadDAO readDAO) {
         this.postgresDAO = postgresDAO;
@@ -63,7 +64,7 @@ public class TestResource {
     }
 
     /**
-     * Adds book to DB
+     * Adds a specific book to DB
      * Checks if book is present in read model
      * If it succeeds ... CREATED event in event table
      * @param isbn is the isbn of the book
@@ -89,7 +90,6 @@ public class TestResource {
             book.setIsbn(isbn);
             book.setTitle(title);
 
-            Gson gson = new Gson();
             String json = gson.toJson(book);
             logger.debug(json);
 
@@ -110,6 +110,49 @@ public class TestResource {
         }
 
         return "Book Added";
+    }
+
+    /**
+     * Adds a batch of books from json file to the DB
+     * Checks if each book is present in read model
+     * If it succeeds ... CREATED event in event table
+     * @return String confirmation
+     */
+    @POST
+    @Path("/add-book-batch")
+    public String createBookBatch() {
+
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        int added = 0;
+        int failed = 0;
+
+        try{
+            File jsonDataFile = new File("/home/alex/Documents/booksJson.json");
+            Books books;
+            books = objectMapper.readValue(jsonDataFile, Books.class);
+
+            String json = gson.toJson(books);
+            logger.debug(json);
+
+            for(Book currentBook: books.getBooks()) {
+                String bookJson = gson.toJson(currentBook);
+                if (readDAO.findBook(currentBook.getIsbn()) != 0) {
+                    failed += 1;
+                    //return currentBook.getTitle() + " is already in Table ... event not created";
+                } else {
+                    postgresDAO.createFunc();
+                    postgresDAO.triggerFunc();
+                    postgresDAO.createTrigger();
+                    postgresDAO.insertEvent(currentBook.getIsbn(), "CREATED", bookJson, timeStamp);
+                    added += 1;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "Books Added = " + added + '\n' +
+                "Number failed = " + failed;
     }
 
     @BindingAnnotation(BindJson.JsonBinderFactory.class)
