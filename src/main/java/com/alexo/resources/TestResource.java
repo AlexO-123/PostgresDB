@@ -18,12 +18,14 @@ import org.skife.jdbi.v2.sqlobject.BindingAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.*;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 
 /**
  * Resource to handle method calls

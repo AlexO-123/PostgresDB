@@ -77,10 +77,6 @@ public abstract class PostgresDAO {
             "LANGUAGE plpgsql")
     public abstract void createFunc();
 
-
-
-
-
     @SqlUpdate(
             "DROP TRIGGER IF EXISTS loan_book ON book_events; " +
                     "CREATE TRIGGER loan_book AFTER INSERT ON book_events " +
@@ -120,10 +116,6 @@ public abstract class PostgresDAO {
             "$BODY$ " +
             "LANGUAGE plpgsql")
     public abstract void loanFunc();
-
-
-
-
 
     @SqlUpdate(
             "DROP TRIGGER IF EXISTS return_book ON book_events; " +
