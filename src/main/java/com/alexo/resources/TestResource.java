@@ -38,7 +38,6 @@ public class TestResource {
     private static Logger logger = LoggerFactory.getLogger(TestResource.class.getName());
     private final ObjectMapper objectMapper = new ObjectMapper();
     private Gson gson = new Gson();
-    private final String FILEPATH = "/home/alex/Documents/booksJson.json";
     private CommandHandler commandHandler = new CommandHandler();
 
     public TestResource(PostgresDAO postgresDAO, ReadDAO readDAO) {
@@ -81,6 +80,7 @@ public class TestResource {
         int failed = 0;
         int added = 0;
         try{
+            String FILEPATH = "/home/alex/Documents/booksJson.json";
             Books books = objectMapper.readValue(
                     new File(FILEPATH), Books.class);
 
@@ -178,102 +178,4 @@ public class TestResource {
             }
         }
     }
-
-
-
-
-
-/*
-    *//**
-     * Method 1 - add a book specified by URL parameters
-     * Adds a specific book to DB
-     * Checks if book is present in read model
-     * If it succeeds ... CREATED event in event table
-     * @param isbn is the isbn of the book
-     * @param title is book title
-     * @return String confirmation
-     *//*
-    @POST
-    @Path("/add-book")
-    public String createBook(
-            @DefaultValue("1111") @QueryParam("isbn") String isbn,
-            @DefaultValue("Book1") @QueryParam("title") String title) {
-
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-
-        *//*
-        Read json format from file
-        Update w/ query param from url
-         *//*
-        try{
-            File jsonDataFile = new File("/home/alex/Documents/jsonDataBasic.json");
-            Book book;
-            book = objectMapper.readValue(jsonDataFile, Book.class);
-            book.setIsbn(isbn);
-            book.setTitle(title);
-
-            String json = gson.toJson(book);
-            logger.debug(json);
-
-            *//*
-            Check the read model
-            If book not found ... update the db and fire the event
-             *//*
-            if (readDAO.findBook(isbn) != 0) {
-                return "Book already in Table ... event not created";
-            } else {
-                postgresDAO.createFunc();
-                postgresDAO.triggerCreateFunc();
-                postgresDAO.createTrigger();
-                postgresDAO.insertEvent(isbn, "CREATED", json, timeStamp);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "Book Added";
-    }
-
-    *//**
-     * Method 2 - add batch books from json file
-     * Adds a batch of books from json file to the DB
-     * Checks if each book is present in read model
-     * If it succeeds ... CREATED event in event table
-     * @return String confirmation
-     *//*
-    @POST
-    @Path("/add-book-batch")
-    public String createBookBatch() {
-
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-        int added = 0;
-        int failed = 0;
-
-        try{
-            File jsonDataFile = new File("/home/alex/Documents/booksJson.json");
-            Books books;
-            books = objectMapper.readValue(jsonDataFile, Books.class);
-
-            String json = gson.toJson(books);
-            logger.debug(json);
-
-            for(Book currentBook: books.getBooks()) {
-                String bookJson = gson.toJson(currentBook);
-                if (readDAO.findBook(currentBook.getIsbn()) != 0) {
-                    failed += 1;
-                } else {
-                    postgresDAO.createFunc();
-                    postgresDAO.triggerCreateFunc();
-                    postgresDAO.createTrigger();
-                    postgresDAO.insertEvent(currentBook.getIsbn(), "CREATED", bookJson, timeStamp);
-                    added += 1;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "Books Added = " + added + '\n' +
-                "Number failed = " + failed;
-    }  */
 }
