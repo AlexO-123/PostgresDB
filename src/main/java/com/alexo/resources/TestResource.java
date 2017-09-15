@@ -29,7 +29,7 @@ import java.sql.SQLException;
 
 /**
  * Resource to handle method calls
- * Basic CRUD capabilities
+ * Fires commands to do a 'thing' depending on the context of the request
  */
 @Path("/postgres")
 public class TestResource {

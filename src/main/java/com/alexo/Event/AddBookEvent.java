@@ -6,6 +6,9 @@ import com.alexo.jdbi.ReadDAO;
 import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 
+/**
+ * Event class to create an event in the event table and update the read model
+ */
 public class AddBookEvent {
     private Book book;
     private String json;

@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * Event class to create an event in the event table and update the read model
+ */
 public class LoanBookEvent {
 
     private String isbn;
@@ -20,6 +23,10 @@ public class LoanBookEvent {
         this.readDAO = readDAO;
     }
 
+    /**
+     * Checks if book is currently available and inserts a 'LOANED' event if available
+     * @return boolean true/false if event fails
+     */
     public boolean loanEvent() {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 
