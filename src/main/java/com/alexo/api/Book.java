@@ -2,16 +2,20 @@ package com.alexo.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Properties of a book
+ * Getters/setters necessary for JDBI
+ */
 public class Book {
 
     @JsonProperty
-    public String isbn;
+    private String isbn;
 
     @JsonProperty
-    public String title;
+    private String title;
 
     @JsonProperty
-    public int pages;
+    private int pages;
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;

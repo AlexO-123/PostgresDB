@@ -78,6 +78,8 @@ public class TestResource {
     @POST
     @Path("/add-book-command")
     public String addBookCommand() {
+        int failed = 0;
+        int added = 0;
         try{
             Books books = objectMapper.readValue(
                     new File(FILEPATH), Books.class);
@@ -88,12 +90,18 @@ public class TestResource {
                 AddBookEvent addBookEvent = new AddBookEvent(currentBook, postgresDAO, readDAO);
                 Command addBook = new AddBookCommand(addBookEvent);
                 commandHandler.setCommand(addBook);
-                commandHandler.triggerEvent();
+                if (commandHandler.triggerEvent()) {
+                    added++;
+                } else {
+                    failed++;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "add-command";
+
+        logger.debug("Number added: " + added + ", Number failed: " + failed);
+        return "Number added = " + added + "\n" + "Failed = " + failed;
     }
 
     /**
@@ -111,9 +119,12 @@ public class TestResource {
             LoanBookEvent loanBookEvent = new LoanBookEvent(isbn, postgresDAO, readDAO);
             Command loanBook = new LoanBookCommand(loanBookEvent);
             commandHandler.setCommand(loanBook);
-            commandHandler.triggerEvent();
+            if (commandHandler.triggerEvent()) {
+                return "Book Loaned";
+            } else {
+                return "Failed to Loan book";
+            }
         }
-        return "Book Loaned";
     }
 
     /**
@@ -131,9 +142,12 @@ public class TestResource {
             ReturnBookEvent returnBookEvent = new ReturnBookEvent(isbn, postgresDAO, readDAO);
             Command returnBook = new ReturnBookCommand(returnBookEvent);
             commandHandler.setCommand(returnBook);
-            commandHandler.triggerEvent();
+            if (commandHandler.triggerEvent()) {
+                return "Book returned";
+            } else {
+                return "Failed to return book";
+            }
         }
-        return "Book returned";
     }
 
     /**

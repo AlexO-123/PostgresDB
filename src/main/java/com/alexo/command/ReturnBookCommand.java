@@ -2,15 +2,18 @@ package com.alexo.command;
 
 import com.alexo.Event.ReturnBookEvent;
 
+/**
+ * Defines a binding between the action and the reciever (event)
+ */
 public class ReturnBookCommand implements Command {
 
-    ReturnBookEvent returnBookEvent;
+    private ReturnBookEvent returnBookEvent;
     public ReturnBookCommand(ReturnBookEvent returnBookEvent) {
         this.returnBookEvent = returnBookEvent;
     }
 
     @Override
-    public void execute() {
-        returnBookEvent.returnBook();
+    public boolean execute() {
+        return returnBookEvent.returnBook();
     }
 }

@@ -4,44 +4,37 @@ import com.alexo.api.Book;
 import com.alexo.jdbi.PostgresDAO;
 import com.alexo.jdbi.ReadDAO;
 import com.google.gson.Gson;
-
 import java.text.SimpleDateFormat;
 
 public class AddBookEvent {
-    Book book;
-    Gson gson = new Gson();
-    String json;
-
-    PostgresDAO postgresDAO;
-    ReadDAO readDAO;
+    private Book book;
+    private String json;
+    private PostgresDAO postgresDAO;
+    private ReadDAO readDAO;
 
     public AddBookEvent(Book book, PostgresDAO postgresDAO, ReadDAO readDAO) {
         this.book = book;
         this.postgresDAO = postgresDAO;
         this.readDAO = readDAO;
 
+        Gson gson = new Gson();
         json = gson.toJson(book);
     }
 
-    public void addEvent() {
-
-        int failed =0;
-        int added =0;
-
+    /**
+     * If book is not currently in table, create the event
+     * @return number of books added/failed
+     */
+    public boolean addEvent() {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-    //String bookJson = gson.toJson(currentBook);
-        if (readDAO.findBook(book.getIsbn()) != 0) {
-            failed += 1;
-        } else {
+
+        if (readDAO.findBook(book.getIsbn()) == 0) {
             postgresDAO.createFunc();
             postgresDAO.triggerCreateFunc();
             postgresDAO.createTrigger();
             postgresDAO.insertEvent(book.getIsbn(), "CREATED", json, timeStamp);
-            added += 1;
+            return true;
         }
-
-        /*return "Books Added = " + added + '\n' +
-                "Number failed = " + failed;*/
-
+        return false;
     }
 }

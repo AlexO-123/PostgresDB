@@ -1,5 +1,8 @@
 package com.alexo.command;
 
+/**
+ * Holds a command and gets command to execute request
+ */
 public class CommandHandler {
     private Command command;
 
@@ -7,7 +10,7 @@ public class CommandHandler {
         this.command = command;
     }
 
-    public void triggerEvent() {
-        command.execute();
+    public boolean triggerEvent() {
+        return command.execute();
     }
 }
