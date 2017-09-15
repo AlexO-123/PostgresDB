@@ -34,7 +34,7 @@ public class AddBookEvent {
             failed += 1;
         } else {
             postgresDAO.createFunc();
-            postgresDAO.triggerFunc();
+            postgresDAO.triggerCreateFunc();
             postgresDAO.createTrigger();
             postgresDAO.insertEvent(book.getIsbn(), "CREATED", json, timeStamp);
             added += 1;

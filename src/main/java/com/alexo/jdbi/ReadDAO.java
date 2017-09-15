@@ -14,7 +14,8 @@ public abstract class ReadDAO {
             "CREATE TABLE IF NOT EXISTS books (" +
             "isbn varchar(32) primary key NOT NULL, " +
             "title varchar(32) NOT NULL, " +
-            "pages varchar(32) NOT NULL)")
+            "pages varchar(32) NOT NULL, " +
+            "available char DEFAULT 'Y')")
     public abstract void createBookTable();
 
     /*@SqlUpdate(
@@ -27,4 +28,11 @@ public abstract class ReadDAO {
             "FROM books " +
             "WHERE isbn = :isbn")
     public abstract int findBook(@Bind("isbn") String isbn);
+
+    @SqlQuery(
+            "SELECT available " +
+            "FROM books " +
+            "WHERE isbn = :isbn")
+    public abstract String checkAvailable(@Bind("isbn") String isbn);
+
 }

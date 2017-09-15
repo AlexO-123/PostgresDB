@@ -1,7 +1,6 @@
 package com.alexo.command;
 
 import com.alexo.Event.AddBookEvent;
-import com.alexo.api.Book;
 
 public class AddBookCommand implements Command {
 
