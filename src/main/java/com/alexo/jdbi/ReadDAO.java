@@ -4,6 +4,8 @@ import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
+import java.util.List;
+
 /**
  * Read data model for booked created
  * Gets queried when a new book wants to be added to the db
@@ -34,5 +36,25 @@ public abstract class ReadDAO {
             "FROM books " +
             "WHERE isbn = :isbn")
     public abstract String checkAvailable(@Bind("isbn") String isbn);
+
+
+    @SqlUpdate(
+            "CREATE MATERIALIZED VIEW book_names " +
+            "AS " +
+            "   SELECT title " +
+            "   FROM books " +
+            "WITH NO DATA"
+    )
+    public abstract void materializedView();
+
+    @SqlUpdate(
+            "REFRESH MATERIALIZED VIEW book_names"
+    )
+    public abstract void refresh();
+
+    @SqlQuery(
+            "SELECT * FROM book_names"
+    )
+    public abstract List<String> queryView();
 
 }

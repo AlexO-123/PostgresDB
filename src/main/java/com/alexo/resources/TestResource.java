@@ -64,10 +64,17 @@ public class TestResource {
         try {
             postgresDAO.createTable();
             readDAO.createBookTable();
+            readDAO.materializedView();
         } catch (UnableToExecuteStatementException e) {
             e.printStackTrace();
         }
         return "Table created";
+    }
+
+    @GET
+    @Path("/query")
+    public void Query() {
+        logger.debug(readDAO.queryView().toString());
     }
 
     /**
@@ -76,6 +83,7 @@ public class TestResource {
      */
     @POST
     @Path("/add-book-command")
+
     public String addBookCommand() {
         int failed = 0;
         int added = 0;

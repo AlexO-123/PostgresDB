@@ -36,6 +36,7 @@ public class AddBookEvent {
             postgresDAO.triggerCreateFunc();
             postgresDAO.createTrigger();
             postgresDAO.insertEvent(book.getIsbn(), "CREATED", json, timeStamp);
+            readDAO.refresh();
             return true;
         }
         return false;
