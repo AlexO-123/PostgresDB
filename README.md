@@ -15,12 +15,10 @@ To update my read model, I am using triggers and functions in postgres. This con
 How to start the PostgresSQL application
 ---
 1. Install docker
-2. Grab a postgres image and pgadmin4 (web) image
-3. Link pgadmin with postgres -- look at host postgres is running on
-4. Create a db from pgadmin
-5. Update config.yml with details of your db -- update data currently there
-6. For the app to work ... need some file on your computer which represents an array of books ... make sure names match classes in api
-7. Update file mapping in TestResource to wherever your file is located on your system
+1. Grab a postgres image and pgadmin4 (web) image
+1. Link pgadmin with postgres -- look at host postgres is running on
+1. Create a db from pgadmin
+1. Update config.yml with details of your db -- update data currently there
 1. Run `mvn clean install` to build your application
 1. Start application with `java -jar target/postgres-es-1.0-SNAPSHOT.jar server config.yml`
 1. To check that your application is running enter url `http://localhost:8080`
