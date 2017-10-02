@@ -22,7 +22,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.*;
 import java.sql.SQLException;
@@ -83,14 +82,20 @@ public class TestResource {
      */
     @POST
     @Path("/add-book-command")
-
     public String addBookCommand() {
         int failed = 0;
         int added = 0;
         try{
-            String FILEPATH = "/home/alex/Documents/booksJson.json";
+            String json = "{\"books\" : [ \n" +
+                    "\t{\"isbn\": 1234, \"title\": \"Book1\", \"pages\": 20},\n" +
+                    "\t{\"isbn\": 1235, \"title\": \"Book2\", \"pages\": 30},\n" +
+                    "\t{\"isbn\": 1236, \"title\": \"Book3\", \"pages\": 10},\n" +
+                    "\t{\"isbn\": 1237, \"title\": \"Book4\", \"pages\": 50},\n" +
+                    "\t{\"isbn\": 1238, \"title\": \"Book5\", \"pages\": 100}\n" +
+                    "]}";
+
             Books books = objectMapper.readValue(
-                    new File(FILEPATH), Books.class);
+                    json, Books.class);
 
             logger.debug(gson.toJson(books));
 
