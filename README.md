@@ -1,4 +1,4 @@
-# PostgresSQL
+# PostgreSQL
 
 The Project
 ---
