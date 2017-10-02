@@ -8,9 +8,9 @@ My first challenge was to get connected to a postgres DB. To do this, I used Doc
 
 To Create a book, I first explicitly made the user input the ISBN and title of the book, whilst defaulting the page numbers to 20. This was useful as it showed me how I can utilise JDBI to insert data in the table. My second iteration of this saw me mapping a json file with a list of books to some POJO and inserting each book into the table. This worked, however was not inline with common CQRS techniques that I discovered. 
 
-The concept of Command Handler to handle commands and trigger events was something I wanted to implement. For this, I created a simple command interface which contained an <code>execute()</code> method. I implement this method in my command handler, which can execute the correct command depending on what called it.
+The concept of a Command Handler to handle commands and trigger events was something I wanted to implement. For this, I created a simple command interface which contained an <code>execute()</code> method. I implement this method in my command handler, which can execute the correct command depending on what called it.
 
-To update my read model, I am using triggers and functions in postgres. This concept see me wrapping a function in a trigger (beacuse you can't pass data via a trigger) and calling some other function to update my projection.
+To update my read model, I am using triggers and functions in postgres. This concept sees me wrapping a function in a trigger (beacuse you can't pass data via a trigger) and calling some other function to update my projection.
 
 How to start the PostgresSQL application
 ---
